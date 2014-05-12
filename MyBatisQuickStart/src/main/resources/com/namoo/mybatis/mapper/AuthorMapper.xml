@@ -3,26 +3,30 @@
 
 <mapper namespace="com.namoo.mybatis.mapper.AuthorMapper">
 	
-	<sql id="author_columns">
+	<resultMap type="Author" id="result-author">
+		<id     property="id"    column="id"    javaType="string" />
+		<result property="name"  column="name"  javaType="string" />
+		<result property="email" column="email" javaType="string" />
+	</resultMap>
+	
+	<!-- java.lang.String => string(aliasing 돼있음) -->
+	<select id="selectAuthor" parameterType="string" resultMap="result-author" >
+	
+	SELECT
 		author_id AS id,
 		author_nm AS name,
 		author_emil AS email
-	</sql>
-	
-	<!-- java.lang.String => string(aliasing 돼있음) -->
-	<select id="selectAuthor" parameterType="string" resultType="Author" >
-	
-	SELECT
-		<include refid="author_columns"/>
 	FROM author_tb
 	WHERE author_id = #{authorId};
 	
 	</select>
 	
-	<select id="selectAllAuthors" flushCache="false" resultType="Author" >
+	<select id="selectAllAuthors" resultMap="result-author" >
 	
 	SELECT
-		<include refid="author_columns"/>
+		author_id AS id,
+		author_nm AS name,
+		author_emil AS email
 	FROM author_tb
 	
 	</select>
@@ -48,7 +52,7 @@
 	</update>
 	
 	<delete id="deleteAuthor" parameterType="string">
-	DELETE from author_tb WHERE author_id = #{authorId}
+		DELETE from author_tb WHERE author_id = #{authorId}
 	</delete>
 	
 </mapper>
